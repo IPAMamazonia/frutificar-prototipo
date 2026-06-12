@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frutificar — Plataforma de Gestão</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Login Overlay -->
+  <div class="login-overlay hidden" id="loginOverlay">
+    <div class="login-card">
+      <div class="login-logo">
+        <i class="fas fa-leaf"></i>
+        <h1>Frutificar</h1>
+        <span>Área Restrita</span>
+      </div>
+      <form id="loginForm" onsubmit="return false;">
+        <div class="login-field">
+          <label><i class="fas fa-user"></i> Usuário</label>
+          <input type="text" id="loginUser" value="admin" placeholder="admin">
+        </div>
+        <div class="login-field">
+          <label><i class="fas fa-lock"></i> Senha</label>
+          <input type="password" id="loginPass" value="admin" placeholder="admin">
+        </div>
+        <div class="login-error" id="loginError">Usuário ou senha inválidos</div>
+        <button type="submit" id="loginBtn">Entrar <i class="fas fa-arrow-right"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="icon-leaf"><i class="fas fa-leaf"></i></div>
+      <div>
+        <h1>Frutificar</h1>
+        <span>Plataforma de Gestão</span>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-item active" data-section="dashboard">
+        <i class="fas fa-chart-pie icon"></i>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-item" data-section="familias">
+        <i class="fas fa-users icon"></i>
+        <span>Famílias</span>
+        <span class="badge">723</span>
+      </div>
+      <div class="nav-item" data-section="instituicoes">
+        <i class="fas fa-building icon"></i>
+        <span>Instituições</span>
+      </div>
+      <div class="nav-item" data-section="cadeias">
+        <i class="fas fa-tree icon"></i>
+        <span>Cadeias</span>
+      </div>
+      <div class="nav-item" data-section="ater">
+        <i class="fas fa-handshake icon"></i>
+        <span>ATER</span>
+      </div>
+      <div class="nav-item" data-section="capacitacao">
+        <i class="fas fa-graduation-cap icon"></i>
+        <span>Capacitação</span>
+      </div>
+      <div class="nav-item" data-section="beneficiamento">
+        <i class="fas fa-industry icon"></i>
+        <span>Beneficiamento</span>
+      </div>
+      <div class="nav-item" data-section="equipamentos">
+        <i class="fas fa-tools icon"></i>
+        <span>Equipamentos</span>
+      </div>
+      <div class="nav-item" data-section="estudos">
+        <i class="fas fa-book icon"></i>
+        <span>Estudos</span>
+      </div>
+      <div class="nav-item" data-section="monitoramento">
+        <i class="fas fa-satellite-dish icon"></i>
+        <span>Monitoramento</span>
+        <span class="badge" style="background:#EF5350" id="alertBadge">0</span>
+      </div>
+      <div class="nav-item" data-section="atividades">
+        <i class="fas fa-calendar-check icon"></i>
+        <span>Atividades</span>
+      </div>
+      <div class="nav-item" data-section="diagnosticos">
+        <i class="fas fa-stethoscope icon"></i>
+        <span>Diagnósticos</span>
+      </div>
+      <div class="nav-item" data-section="relatorios">
+        <i class="fas fa-database icon"></i>
+        <span>Dados</span>
+      </div>
+      <div class="nav-item nav-item-restrito hidden" data-section="coleta">
+        <i class="fas fa-clipboard-list icon"></i>
+        <span>Coleta</span>
+      </div>
+    </nav>
+    <div class="sidebar-footer">v1.0 &bull; Projeto Frutificar</div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="breadcrumb">Frutificar / <span id="pageTitle">Dashboard</span></div>
+      </div>
+      <div class="header-right">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar..." id="globalSearch">
+        </div>
+        <span style="font-size:0.7rem;background:#F3E5F5;color:var(--acai);padding:2px 10px;border-radius:20px;font-weight:600">Gestor</span>
+        <div class="user-avatar" id="loginTrigger" title="Fazer login">ED</div>
+        <div class="header-logged-user hidden" id="loggedUser">
+          <i class="fas fa-user-circle"></i>
+          <span>admin</span>
+          <button class="logout-btn" id="logoutBtn" title="Sair"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard -->
+    <section class="section active" id="section-dashboard">
+      <div class="dash-header">
+        <div>
+          <h2 class="section-title">Dashboard</h2>
+          <p class="section-sub">Visão geral do Projeto Frutificar — <strong>723 famílias</strong> &bull; <strong>8 instituições</strong></p>
+        </div>
+      </div>
+      <div class="dash-chain-filter" id="dashChainFilter">
+        <button class="active" data-chain="">Todas</button>
+        <button data-chain="acai"><i class="fas fa-leaf"></i> Açaí</button>
+        <button data-chain="cacau"><i class="fas fa-seedling"></i> Cacau</button>
+      </div>
+
+      <div class="kpi-grid" id="kpiGrid"></div>
+
+      <!-- Comparação por cadeia -->
+      <div class="chain-comparison" id="chainComparison"></div>
+
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3><i class="fas fa-chart-line" style="color:var(--primary)"></i> Execução do Projeto</h3>
+          <div class="chart-wrap"><canvas id="chartLine"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3><i class="fas fa-chart-pie" style="color:var(--acai)"></i> Metas por Componente</h3>
+          <div class="chart-wrap pie-chart"><canvas id="chartPie"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Indicadores -->
+      <div class="kpi-grid" id="indicatorGrid"></div>
+
+      <div class="chart-grid chart-grid-equal" style="margin-bottom:1.5rem">
+        <div class="chart-card">
+          <h3><i class="fas fa-chart-pie" style="color:var(--primary)"></i> Indicadores do Projeto</h3>
+          <div class="chart-wrap" style="height:230px"><canvas id="chartRadar"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3><i class="fas fa-exclamation-triangle" style="color:#EF5350"></i> Alertas de Desmatamento</h3>
+          <div id="alertList"></div>
+        </div>
+      </div>
+
+      <div class="chart-card" style="padding-bottom:0.8rem;margin-bottom:1.5rem">
+        <h3><i class="fas fa-clock" style="color:#FFA726"></i> Últimas Atividades</h3>
+        <ul class="activity-list" id="activityList"></ul>
+      </div>
+    </section>
+
+    <!-- Famílias -->
+    <section class="section" id="section-familias">
+      <h2 class="section-title">Famílias</h2>
+      <p class="section-sub">Cadastro e indicadores das <strong>723 famílias</strong> beneficiadas</p>
+
+      <div class="fam-controls">
+        <input type="text" class="search-input" placeholder="Buscar por nome ou ID..." id="famSearch">
+        <select id="famFilterCadeia">
+          <option value="">Todas cadeias</option>
+          <option value="acai">Açaí</option>
+          <option value="cacau">Cacau</option>
+        </select>
+        <select id="famFilterInst">
+          <option value="">Todas instituições</option>
+        </select>
+        <select id="famFilterMun">
+          <option value="">Todos municípios</option>
+        </select>
+        <select id="famFilterSegmento">
+          <option value="">Todos segmentos</option>
+          <option value="assentado">Assentado</option>
+          <option value="agricultor_familiar">Agricultor Familiar</option>
+          <option value="quilombola">Quilombola</option>
+          <option value="ribeirinho">Ribeirinho</option>
+        </select>
+        <button class="btn-novo" data-modal="familia"><i class="fas fa-plus"></i> Novo</button>
+      </div>
+
+      <div class="fam-stats" id="famStats"></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Cadeia</th>
+              <th>Município</th>
+              <th>Instituição</th>
+              <th>Renda (R$)</th>
+              <th>Área (ha)</th>
+              <th>Visitas</th>
+            </tr>
+          </thead>
+          <tbody id="famTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="fam-pagination" id="famPagination">
+        <span id="famInfo">Mostrando 1-20 de 723</span>
+        <div class="pages" id="famPages"></div>
+      </div>
+    </section>
+
+    <!-- Instituições -->
+    <section class="section" id="section-instituicoes">
+      <h2 class="section-title">Instituições</h2>
+      <p class="section-sub">8 instituições parceiras organizadas por região</p>
+
+      <div class="inst-filter" id="instFilter">
+        <button class="active" data-filter="all">Todas</button>
+        <button data-filter="PA">Pará</button>
+        <button data-filter="AP">Amapá</button>
+      </div>
+
+      <div id="instContainer"></div>
+    </section>
+
+    <!-- Monitoramento -->
+    <section class="section" id="section-monitoramento">
+      <h2 class="section-title">Monitoramento Ambiental</h2>
+      <p class="section-sub">Geoprocessamento, áreas manejadas e alertas <button class="btn-novo" data-modal="saf"><i class="fas fa-plus"></i> Nova SAF</button></p>
+
+      <div class="kpi-grid" id="monitorKpiGrid"></div>
+
+      <div class="monitor-grid">
+        <div class="monitor-map">
+          <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem">
+            <i class="fas fa-map-marked-alt" style="color:var(--primary)"></i> Mapa de Cobertura
+          </h3>
+          <div id="leafletMap" style="flex:1;border-radius:8px;min-height:240px;z-index:1"></div>
+        </div>
+        <div class="monitor-alerts">
+          <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem">
+            <i class="fas fa-exclamation-triangle" style="color:#EF5350"></i> Alertas Recentes
+          </h3>
+          <div id="monitorAlertList"></div>
+        </div>
+      </div>
+
+      <div class="chart-grid chart-grid-equal">
+        <div class="chart-card">
+          <h3><i class="fas fa-tree" style="color:var(--primary)"></i> Área de Floresta Manejada (ha)</h3>
+          <div class="chart-wrap" style="height:260px"><canvas id="chartAreaMonitor"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3><i class="fas fa-fire" style="color:#E65100"></i> Focos de Calor por Município</h3>
+          <div class="chart-wrap" style="height:260px"><canvas id="chartFocosCalor"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Atividades -->
+    <section class="section" id="section-atividades">
+      <h2 class="section-title">Atividades</h2>
+      <p class="section-sub">Feed unificado de ATER, capacitações e atividades do projeto</p>
+
+      <div class="atv-summary" id="atvSummary"></div>
+
+      <div class="atv-filters" id="atvFilters">
+        <button class="active" data-filter="">Todas</button>
+        <button data-filter="ater"><i class="fas fa-handshake"></i> ATER</button>
+        <button data-filter="capacitacao"><i class="fas fa-graduation-cap"></i> Capacitação</button>
+        <button data-filter="geral"><i class="fas fa-calendar-check"></i> Gerais</button>
+        <button class="btn-novo" data-modal="atividades" style="margin-left:auto"><i class="fas fa-plus"></i> Nova Atividade</button>
+      </div>
+
+      <div class="chart-card">
+        <h3 style="margin-bottom:1rem"><i class="fas fa-stream" style="color:var(--primary)"></i> Linha do Tempo</h3>
+        <div id="atvFeed"></div>
+      </div>
+    </section>
+
+    <!-- Diagnósticos -->
+    <section class="section" id="section-diagnosticos">
+      <h2 class="section-title">Diagnósticos Familiares</h2>
+      <p class="section-sub">Perfil das famílias, execução de ATER e capacitações por cadeia</p>
+      <div class="diag-grid-2col" id="diagCharts"></div>
+    </section>
+
+    <!-- Dados -->
+    <section class="section" id="section-relatorios">
+      <h2 class="section-title">Dados</h2>
+      <p class="section-sub">Exporte os dados do projeto para análise em CSV</p>
+
+      <div class="data-grid" id="dataGrid"></div>
+    </section>
+
+    <!-- Cadeias -->
+    <section class="section" id="section-cadeias">
+      <h2 class="section-title">Cadeias Produtivas</h2>
+      <p class="section-sub">Desempenho das cadeias do <strong>Açaí</strong> e <strong>Cacau</strong></p>
+      <div id="cadeiasContainer"></div>
+    </section>
+
+    <!-- ATER -->
+    <section class="section" id="section-ater">
+      <h2 class="section-title">Assistência Técnica (ATER)</h2>
+      <p class="section-sub">Registro de visitas técnicas, diagnósticos e planos de produção</p>
+      <div class="atre-controls">
+        <input type="text" class="search-input" placeholder="Buscar por família, técnico..." id="aterSearch">
+        <select id="aterFilterStatus">
+          <option value="">Todos status</option>
+          <option value="realizada">Realizada</option>
+          <option value="agendada">Agendada</option>
+        </select>
+        <select id="aterFilterTipo">
+          <option value="">Todos tipos</option>
+          <option value="visita_tecnica">Visita Técnica</option>
+          <option value="diagnostico">Diagnóstico</option>
+          <option value="plano_producao">Plano de Produção</option>
+          <option value="regularizacao_ambiental">Reg. Ambiental</option>
+        </select>
+        <button class="btn-novo" data-modal="ater"><i class="fas fa-plus"></i> Novo</button>
+      </div>
+      <div class="ater-stats" id="aterStats"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Família</th>
+              <th>Data</th>
+              <th>Técnico</th>
+              <th>Tipo</th>
+              <th>Status</th>
+              <th>Instituição</th>
+            </tr>
+          </thead>
+          <tbody id="aterTableBody"></tbody>
+        </table>
+      </div>
+      <div class="fam-pagination" id="aterPagination">
+        <span id="aterInfo">Mostrando 1-20 de 200</span>
+        <div class="pages" id="aterPages"></div>
+      </div>
+    </section>
+
+    <!-- Capacitação -->
+    <section class="section" id="section-capacitacao">
+      <h2 class="section-title">Capacitação</h2>
+      <p class="section-sub">Cursos, oficinas e treinamentos realizados</p>
+      <div class="atre-controls">
+        <select id="capFilterCadeia">
+          <option value="">Todas cadeias</option>
+          <option value="acai">Açaí</option>
+          <option value="cacau">Cacau</option>
+          <option value="ambas">Ambas</option>
+        </select>
+        <select id="capFilterTipo">
+          <option value="">Todos tipos</option>
+          <option value="curso">Curso</option>
+          <option value="oficina">Oficina</option>
+        </select>
+        <select id="capFilterStatus">
+          <option value="">Todos status</option>
+          <option value="realizada">Realizada</option>
+          <option value="agendada">Agendada</option>
+        </select>
+        <button class="btn-novo" data-modal="capacitacao"><i class="fas fa-plus"></i> Novo</button>
+      </div>
+      <div class="ater-stats" id="capStats"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Curso</th>
+              <th>Tipo</th>
+              <th>Cadeia</th>
+              <th>Data</th>
+              <th>Participantes</th>
+              <th>Mulheres</th>
+              <th>Instrutor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="capTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Beneficiamento -->
+    <section class="section" id="section-beneficiamento">
+      <h2 class="section-title">Unidades de Beneficiamento</h2>
+      <p class="section-sub">Batedeiras de açaí e agroindústrias apoiadas pelo projeto <button class="btn-novo" data-modal="beneficiamento"><i class="fas fa-plus"></i> Novo</button></p>
+      <div id="benefContainer"></div>
+    </section>
+
+    <!-- Equipamentos -->
+    <section class="section" id="section-equipamentos">
+      <h2 class="section-title">Equipamentos</h2>
+      <p class="section-sub">Veículos e equipamentos adquiridos para apoio à produção sustentável <button class="btn-novo" data-modal="equipamentos"><i class="fas fa-plus"></i> Novo</button></p>
+      <div class="equip-stats" id="equipStats"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo</th>
+              <th>Descrição</th>
+              <th>Instituição</th>
+              <th>Aquisição</th>
+              <th>Valor (R$)</th>
+            </tr>
+          </thead>
+          <tbody id="equipTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Estudos -->
+    <section class="section" id="section-estudos">
+      <h2 class="section-title">Estudos e Publicações</h2>
+      <p class="section-sub">Diagnósticos, planos de negócio, publicações e materiais pedagógicos <button class="btn-novo" data-modal="estudos"><i class="fas fa-plus"></i> Novo</button></p>
+      <div class="equip-stats" id="estudosStats"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Tipo</th>
+              <th>Cadeia</th>
+              <th>Instituição</th>
+              <th>Conclusão</th>
+            </tr>
+          </thead>
+          <tbody id="estudosTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Coleta -->
+    <section class="section" id="section-coleta">
+      <h2 class="section-title">Coleta de Dados</h2>
+      <p class="section-sub">Cadastro de famílias e importação de dados</p>
+
+      <div class="coleta-tabs">
+        <button class="coleta-tab active" data-tab="form">Formulário</button>
+        <button class="coleta-tab" data-tab="upload">Importar CSV</button>
+      </div>
+
+      <div class="coleta-content" id="coletaForm">
+        <div class="chart-card">
+          <h3><i class="fas fa-pen" style="color:var(--primary)"></i> Cadastro de Família</h3>
+          <form id="familyForm" class="coleta-form" onsubmit="return false;">
+            <div class="form-grid">
+              <div class="form-field">
+                <label>Nome do Responsável</label>
+                <input type="text" id="fNome" required>
+              </div>
+              <div class="form-field">
+                <label>Município</label>
+                <select id="fMun"></select>
+              </div>
+              <div class="form-field">
+                <label>Instituição</label>
+                <select id="fInst"></select>
+              </div>
+              <div class="form-field">
+                <label>Renda Familiar (R$)</label>
+                <input type="number" id="fRenda" step="0.01" min="0">
+              </div>
+              <div class="form-field">
+                <label>Área (ha)</label>
+                <input type="number" id="fArea" step="0.1" min="0">
+              </div>
+              <div class="form-field">
+                <label>Nº de Visitas</label>
+                <input type="number" id="fVisitas" min="0">
+              </div>
+              <div class="form-field">
+                <label>Mulheres na Família</label>
+                <input type="number" id="fMulheres" min="0">
+              </div>
+              <div class="form-field">
+                <label>Tem assistência técnica</label>
+                <select id="fAssistencia"></select>
+              </div>
+              <div class="form-field">
+                <label>Cadeia Produtiva</label>
+                <select id="fCadeia">
+                  <option value="">Selecione...</option>
+                  <option value="acai">Açaí</option>
+                  <option value="cacau">Cacau</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Segmento do Beneficiário</label>
+                <select id="fSegmento">
+                  <option value="">Selecione...</option>
+                  <option value="agricultor_familiar">Agricultor Familiar</option>
+                  <option value="assentado">Assentado</option>
+                  <option value="quilombola">Quilombola</option>
+                  <option value="ribeirinho">Ribeirinho</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Produção Anual (ton)</label>
+                <input type="number" id="fProducao" step="0.1" min="0">
+              </div>
+              <div class="form-field">
+                <label>Área de SAF (ha)</label>
+                <input type="number" id="fAreaSAF" step="0.1" min="0">
+              </div>
+              <div class="form-field">
+                <label>Status ATER</label>
+                <select id="fStatusATER">
+                  <option value="">Selecione...</option>
+                  <option value="sim">Sim</option>
+                  <option value="nao">Não</option>
+                  <option value="em_andamento">Em andamento</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Capacitações Recebidas</label>
+                <input type="number" id="fCapacitacoes" min="0">
+              </div>
+              <div class="form-field">
+                <label>Possui CAR</label>
+                <select id="fPossuiCAR">
+                  <option value="">Selecione...</option>
+                  <option value="sim">Sim</option>
+                  <option value="nao">Não</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Unidade de Beneficiamento</label>
+                <select id="fPossuiBenef">
+                  <option value="">Selecione...</option>
+                  <option value="sim">Sim</option>
+                  <option value="nao">Não</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="reset" class="btn-reset"><i class="fas fa-undo"></i> Limpar</button>
+              <button type="submit" class="btn-submit" id="formSubmit"><i class="fas fa-save"></i> Salvar</button>
+            </div>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <i class="fas fa-check-circle"></i> Dados salvos com sucesso!
+          </div>
+        </div>
+      </div>
+
+      <div class="coleta-content" id="coletaUpload" style="display:none">
+        <div class="chart-card">
+          <h3><i class="fas fa-upload" style="color:var(--acai)"></i> Importar CSV de Famílias</h3>
+          <p style="font-size:0.82rem;color:var(--text-light);margin-bottom:1rem">
+            Selecione um arquivo CSV com as colunas: nome, municipio, instituicao, cadeia, segmento, renda, area, area_saf, visitas, mulheres, assistencia, status_ater, producao_ton, receita_anual, capacitacoes_recebidas, possui_beneficiamento, possui_car
+          </p>
+          <div class="upload-area" id="uploadArea">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Arraste o arquivo CSV aqui ou clique para selecionar</p>
+            <input type="file" id="csvFile" accept=".csv" hidden>
+            <button type="button" id="uploadBtn"><i class="fas fa-folder-open"></i> Selecionar Arquivo</button>
+          </div>
+          <div class="upload-preview" id="uploadPreview" style="display:none">
+            <h3 style="font-size:0.9rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem">
+              <i class="fas fa-eye"></i> Prévia (<span id="uploadCount">0</span> registros)
+            </h3>
+            <div class="table-wrap" style="max-height:300px;overflow:auto">
+              <table id="uploadTable"></table>
+            </div>
+            <div class="form-actions" style="margin-top:1rem">
+              <button type="button" id="importConfirm" class="btn-submit"><i class="fas fa-check"></i> Confirmar Importação</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Modal Novo Registro -->
+  <div class="modal-overlay hidden" id="modalOverlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle"><i class="fas fa-plus"></i> <span></span></h3>
+        <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="btn-reset" id="modalCancel">Cancelar</button>
+        <button class="btn-submit" id="modalSave"><i class="fas fa-save"></i> Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
