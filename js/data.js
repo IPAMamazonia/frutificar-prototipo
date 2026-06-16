@@ -14,42 +14,42 @@ const DATA = {
 
   institutions: [
     { id: 'fvp', name: 'FVP', full: 'Fundação Viver Produzir', region: 'Transamazônica', state: 'PA',
-      cities: ['Altamira', 'Anapu'], families: 120, progress: 8, activities: 12, planned: 48,
+      cities: ['Altamira', 'Anapu'], families: 120, progress: 8, activities: 12, planned: 16,
       status: 'onTrack', color: '#2E7D33', bg: '#E8F5E9',
       activityBreakdown: { visitas: { done:4, prog:1, pend:1, total:6 }, treinamentos: { done:3, prog:1, pend:1, total:5 }, diagnosticos: { done:5, prog:0, pend:0, total:5 } },
       metaBreakdown: { beneficiarios: 260, agroindustrias: 4, veiculos: 1, estudos: 4, eventos: 14, publicacoes: 6 } },
     { id: 'tas', name: 'TAS', full: 'TAS Amazônia', region: 'Transamazônica', state: 'PA',
-      cities: ['Senador José Porfírio'], families: 95, progress: 6, activities: 8, planned: 36,
+      cities: ['Senador José Porfírio'], families: 95, progress: 6, activities: 8, planned: 12,
       status: 'onTrack', color: '#6A1B9A', bg: '#F3E5F5',
       activityBreakdown: { visitas: { done:2, prog:0, pend:2, total:4 }, treinamentos: { done:3, prog:1, pend:0, total:4 }, diagnosticos: { done:3, prog:1, pend:0, total:4 } },
       metaBreakdown: { beneficiarios: 120, agroindustrias: 1, veiculos: 1, estudos: 2, eventos: 10, publicacoes: 3 } },
     { id: 'fancef', name: 'FANCEF', full: 'Fundação ANCEF', region: 'Tapajós', state: 'PA',
-      cities: ['Itaituba', 'Trairão', 'Rurópolis'], families: 85, progress: 4, activities: 5, planned: 40,
+      cities: ['Itaituba', 'Trairão', 'Rurópolis'], families: 85, progress: 4, activities: 2, planned: 9,
       status: 'warning', color: '#E65100', bg: '#FFF3E0',
       activityBreakdown: { visitas: { done:1, prog:1, pend:2, total:4 }, treinamentos: { done:0, prog:1, pend:2, total:3 }, diagnosticos: { done:1, prog:0, pend:1, total:2 } },
       metaBreakdown: { beneficiarios: 100, agroindustrias: 1, veiculos: 1, estudos: 2, eventos: 21, publicacoes: 1 } },
     { id: 'fox', name: 'Fox', full: 'Fox Ambiental', region: 'Tapajós', state: 'PA',
-      cities: ['Novo Progresso'], families: 78, progress: 7, activities: 10, planned: 32,
+      cities: ['Novo Progresso'], families: 78, progress: 7, activities: 7, planned: 9,
       status: 'onTrack', color: '#1565C0', bg: '#E3F2FD',
       activityBreakdown: { visitas: { done:3, prog:0, pend:1, total:4 }, treinamentos: { done:2, prog:0, pend:1, total:3 }, diagnosticos: { done:2, prog:0, pend:0, total:2 } },
       metaBreakdown: { beneficiarios: 100, agroindustrias: 1, veiculos: 1, estudos: 1, eventos: 25, publicacoes: 2 } },
     { id: 'zafab', name: 'Zafab', full: 'Zafab Tecnologia', region: 'Tapajós', state: 'PA',
-      cities: ['Jacareacanga'], families: 65, progress: 3, activities: 3, planned: 28,
+      cities: ['Jacareacanga'], families: 65, progress: 3, activities: 2, planned: 8,
       status: 'late', color: '#C62828', bg: '#FFEBEE',
       activityBreakdown: { visitas: { done:0, prog:1, pend:2, total:3 }, treinamentos: { done:1, prog:0, pend:2, total:3 }, diagnosticos: { done:1, prog:0, pend:1, total:2 } },
       metaBreakdown: { beneficiarios: 80, agroindustrias: 0, veiculos: 1, estudos: 1, eventos: 8, publicacoes: 2 } },
     { id: 'efan', name: 'Efan', full: 'EFAN do Brasil', region: 'Amapá', state: 'AP',
-      cities: ['Macapá', 'Santana'], families: 110, progress: 5, activities: 7, planned: 44,
+      cities: ['Macapá', 'Santana'], families: 110, progress: 5, activities: 4, planned: 10,
       status: 'warning', color: '#00838F', bg: '#E0F7FA',
       activityBreakdown: { visitas: { done:2, prog:1, pend:2, total:5 }, treinamentos: { done:1, prog:0, pend:2, total:3 }, diagnosticos: { done:1, prog:0, pend:1, total:2 } },
       metaBreakdown: { beneficiarios: 150, agroindustrias: 2, veiculos: 1, estudos: 2, eventos: 12, publicacoes: 4 } },
     { id: 'asbab', name: 'Asbab', full: 'Associação ASBAB', region: 'Amapá', state: 'AP',
-      cities: ['Laranjal do Jari'], families: 90, progress: 4, activities: 4, planned: 36,
+      cities: ['Laranjal do Jari'], families: 90, progress: 4, activities: 4, planned: 5,
       status: 'onTrack', color: '#F9A825', bg: '#FFFDE7',
       activityBreakdown: { visitas: { done:1, prog:0, pend:1, total:2 }, treinamentos: { done:2, prog:0, pend:0, total:2 }, diagnosticos: { done:1, prog:0, pend:0, total:1 } },
       metaBreakdown: { beneficiarios: 80, agroindustrias: 1, veiculos: 1, estudos: 1, eventos: 10, publicacoes: 2 } },
     { id: 'efac', name: 'EFAC', full: 'EFAC Amazônia', region: 'Amapá', state: 'AP',
-      cities: ['Porto Grande', 'Ferreira Gomes'], families: 80, progress: 2, activities: 2, planned: 32,
+      cities: ['Porto Grande', 'Ferreira Gomes'], families: 80, progress: 2, activities: 0, planned: 6,
       status: 'onTrack', color: '#4E342E', bg: '#EFEBE9',
       activityBreakdown: { visitas: { done:0, prog:1, pend:2, total:3 }, treinamentos: { done:0, prog:0, pend:2, total:2 }, diagnosticos: { done:0, prog:0, pend:1, total:1 } },
       metaBreakdown: { beneficiarios: 100, agroindustrias: 1, veiculos: 1, estudos: 1, eventos: 6, publicacoes: 3 } },
@@ -144,62 +144,7 @@ const DATA = {
     'Ferreira Gomes': [0.857, -51.180],
   },
 
-  families: (() => {
-    const nomes = [
-      'Silva','Santos','Oliveira','Souza','Lima','Pereira','Costa','Ferreira','Rodrigues','Almeida',
-      'Nascimento','Araújo','Ribeiro','Carvalho','Gomes','Martins','Barbosa','Rocha','Dias','Moreira',
-      'Cardoso','Teixeira','Cavalcanti','Melo','Monteiro','Cunha','Pinto','Mendes','Campos','Fernandes',
-    ];
-    const escolOpts = ['Analfabeto','Fund. Incompl.','Fund. Compl.','Médio','Superior'];
-    const fontes = ['Agricultura','Extrativismo','Artesanato','Pesca','Serviços','Aposentadoria'];
-    const list = [];
-    for (let i = 1; i <= 723; i++) {
-      const isMulher = Math.random() > 0.45;
-      const isJovem = Math.random() > 0.7;
-      const isIndigena = Math.random() > 0.95;
-      const inst = INSTS[Math.floor(Math.random() * INSTS.length)];
-      const muns = inst === 'FVP' || inst === 'TAS' ? MUN_PA.slice(0,2) :
-                  (inst === 'FANCEF' || inst === 'Fox' || inst === 'Zafab') ? MUN_PA.slice(2) :
-                  MUN_AP;
-      const mun = muns[Math.floor(Math.random() * muns.length)];
-      const renda = +(Math.random() * 3500 + 500).toFixed(2);
-      const isAP = MUN_AP.includes(mun);
-      const cadeia = isAP ? (Math.random() > 0.2 ? 'acai' : 'cacau') : (Math.random() > 0.35 ? 'cacau' : 'acai');
-      const segRandom = Math.random();
-      const segmento = segRandom < 0.40 ? 'assentado' : segRandom < 0.70 ? 'agricultor_familiar' : segRandom < 0.88 ? 'quilombola' : 'ribeirinho';
-      list.push({
-        id: `FAM-${String(i).padStart(4,'0')}`,
-        nome: `${nomes[Math.floor(Math.random()*nomes.length)]} ${nomes[Math.floor(Math.random()*nomes.length)]}`,
-        municipio: mun,
-        instituicao: inst,
-        cadeia,
-        segmento,
-        renda,
-        mulheres: isMulher ? 1 : 0,
-        jovens: isJovem ? 1 : 0,
-        indigena: isIndigena ? 1 : 0,
-        visitas: Math.floor(Math.random() * 4),
-        area: +(Math.random() * 50 + 2).toFixed(1),
-        area_saf: +(Math.random() * 5).toFixed(1),
-        area_manejada: +(Math.random() * 20 + 0.5).toFixed(1),
-        filhos: Math.floor(Math.random() * 7),
-        escolaridade: escolOpts[Math.floor(Math.random() * escolOpts.length)],
-        fonteRenda: fontes.filter(() => Math.random() > 0.5),
-        energia: Math.random() > 0.2,
-        agua: Math.random() > 0.45,
-        esgoto: Math.random() > 0.55,
-        locomocao: Math.random() > 0.4,
-        assistencia: Math.random() > 0.35,
-        status_ater: ['sim','sim','nao','em_andamento'][Math.floor(Math.random()*4)],
-        producao_ton: +(Math.random() * 8 + 0.5).toFixed(2),
-        receita_anual: +(Math.random() * 20000 + 2000).toFixed(0),
-        capacitacoes_recebidas: Math.floor(Math.random() * 6),
-        possui_beneficiamento: Math.random() > 0.85,
-        possui_car: Math.random() > 0.25,
-      });
-    }
-    return list;
-  })(),
+  families: null,
 
   cadeias: null,
   ater: null,
@@ -250,6 +195,62 @@ const DATA = {
       desc: 'Alerta de 3,2 ha próximo a assentamento' },
   ],
 };
+
+// --- Gerar famílias respeitando contagem de cada aglutinada ---
+DATA.families = (() => {
+  const nomes = [
+    'Silva','Santos','Oliveira','Souza','Lima','Pereira','Costa','Ferreira','Rodrigues','Almeida',
+    'Nascimento','Araújo','Ribeiro','Carvalho','Gomes','Martins','Barbosa','Rocha','Dias','Moreira',
+    'Cardoso','Teixeira','Cavalcanti','Melo','Monteiro','Cunha','Pinto','Mendes','Campos','Fernandes',
+  ];
+  const escolOpts = ['Analfabeto','Fund. Incompl.','Fund. Compl.','Médio','Superior'];
+  const fontes = ['Agricultura','Extrativismo','Artesanato','Pesca','Serviços','Aposentadoria'];
+  const list = [];
+  let counter = 1;
+  DATA.institutions.forEach(inst => {
+    for (let j = 0; j < inst.families; j++) {
+      const isMulher = Math.random() > 0.45;
+      const isJovem = Math.random() > 0.7;
+      const isIndigena = Math.random() > 0.95;
+      const mun = inst.cities[Math.floor(Math.random() * inst.cities.length)];
+      const isAP = MUN_AP.includes(mun);
+      const cadeia = isAP ? (Math.random() > 0.2 ? 'acai' : 'cacau') : (Math.random() > 0.35 ? 'cacau' : 'acai');
+      const segRandom = Math.random();
+      const segmento = segRandom < 0.40 ? 'assentado' : segRandom < 0.70 ? 'agricultor_familiar' : segRandom < 0.88 ? 'quilombola' : 'ribeirinho';
+      list.push({
+        id: `FAM-${String(counter++).padStart(4,'0')}`,
+        nome: `${nomes[Math.floor(Math.random()*nomes.length)]} ${nomes[Math.floor(Math.random()*nomes.length)]}`,
+        municipio: mun,
+        instituicao: inst.name,
+        cadeia,
+        segmento,
+        renda: +(Math.random() * 3500 + 500).toFixed(2),
+        mulheres: isMulher ? 1 : 0,
+        jovens: isJovem ? 1 : 0,
+        indigena: isIndigena ? 1 : 0,
+        visitas: Math.floor(Math.random() * 4),
+        area: +(Math.random() * 50 + 2).toFixed(1),
+        area_saf: +(Math.random() * 5).toFixed(1),
+        area_manejada: +(Math.random() * 20 + 0.5).toFixed(1),
+        filhos: Math.floor(Math.random() * 7),
+        escolaridade: escolOpts[Math.floor(Math.random() * escolOpts.length)],
+        fonteRenda: fontes.filter(() => Math.random() > 0.5),
+        energia: Math.random() > 0.2,
+        agua: Math.random() > 0.45,
+        esgoto: Math.random() > 0.55,
+        locomocao: Math.random() > 0.4,
+        assistencia: Math.random() > 0.35,
+        status_ater: ['sim','sim','nao','em_andamento'][Math.floor(Math.random()*4)],
+        producao_ton: +(Math.random() * 8 + 0.5).toFixed(2),
+        receita_anual: +(Math.random() * 20000 + 2000).toFixed(0),
+        capacitacoes_recebidas: Math.floor(Math.random() * 6),
+        possui_beneficiamento: Math.random() > 0.85,
+        possui_car: Math.random() > 0.25,
+      });
+    }
+  });
+  return list;
+})();
 
 // --- Populate segmento data from families ---
 (() => {

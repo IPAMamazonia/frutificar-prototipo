@@ -56,7 +56,7 @@
       </div>
       <div class="nav-item" data-section="instituicoes">
         <i class="fas fa-building icon"></i>
-        <span>Instituições</span>
+        <span>Aglutinadas</span>
       </div>
       <div class="nav-item" data-section="cadeias">
         <i class="fas fa-tree icon"></i>
@@ -135,7 +135,7 @@
       <div class="dash-header">
         <div>
           <h2 class="section-title">Dashboard</h2>
-          <p class="section-sub">Visão geral do Projeto Frutificar — <strong>723 famílias</strong> &bull; <strong>8 instituições</strong></p>
+          <p class="section-sub">Visão geral do Projeto Frutificar —         <strong>723 famílias</strong> &bull; <strong>8 aglutinadas</strong></p>
         </div>
       </div>
       <div class="dash-chain-filter" id="dashChainFilter">
@@ -234,10 +234,10 @@
       </div>
     </section>
 
-    <!-- Instituições -->
+    <!-- Aglutinadas -->
     <section class="section" id="section-instituicoes">
-      <h2 class="section-title">Instituições</h2>
-      <p class="section-sub">8 instituições parceiras organizadas por região</p>
+      <h2 class="section-title">Aglutinadas</h2>
+      <p class="section-sub">8 aglutinadas parceiras organizadas por região</p>
 
       <div class="inst-filter" id="instFilter">
         <button class="active" data-filter="all">Todas</button>
@@ -246,6 +246,16 @@
       </div>
 
       <div id="instContainer"></div>
+    </section>
+
+    <!-- Aglutinada Detail -->
+    <section class="section" id="section-aglutinada-detail">
+      <div class="detail-back">
+        <button onclick="App.backToInstituicoes()" class="btn-back">
+          <i class="fas fa-arrow-left"></i> Voltar para Aglutinadas
+        </button>
+      </div>
+      <div id="aglutinadaDetailContainer"></div>
     </section>
 
     <!-- Monitoramento -->

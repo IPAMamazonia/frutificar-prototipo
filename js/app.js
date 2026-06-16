@@ -1,5 +1,6 @@
 const App = {
   currentSection: 'dashboard',
+  currentAglutinadaId: null,
   famPage: 1,
   famPerPage: 20,
   famFiltered: [],
@@ -23,11 +24,12 @@ document.querySelectorAll('.nav-item').forEach(item => {
 App.openSection = function (section) {
   App.currentSection = section;
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.querySelector(`.nav-item[data-section="${section}"]`).classList.add('active');
+  const navItem = document.querySelector(`.nav-item[data-section="${section}"]`);
+  if (navItem) navItem.classList.add('active');
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(`section-${section}`).classList.add('active');
   document.getElementById('pageTitle').textContent =
-     ({ dashboard: 'Dashboard', familias: 'Famílias', instituicoes: 'Instituições',
+      ({ dashboard: 'Dashboard', familias: 'Famílias', instituicoes: 'Aglutinadas',
         monitoramento: 'Monitoramento', atividades: 'Atividades',
         diagnosticos: 'Diagnósticos', relatorios: 'Dados', coleta: 'Coleta',
         cadeias: 'Cadeias', ater: 'ATER', beneficiamento: 'Beneficiamento',
@@ -56,6 +58,13 @@ App.openSection = function (section) {
   if (section === 'instituicoes') {
     const activeFilter = document.querySelector('#instFilter .active');
     App.renderInstitutions(activeFilter ? activeFilter.dataset.filter : 'all');
+  }
+  if (section === 'aglutinada-detail') {
+    if (App.currentAglutinadaId) {
+      const inst = DATA.institutions.find(i => i.id === App.currentAglutinadaId);
+      document.getElementById('pageTitle').textContent = 'Aglutinadas / ' + (inst ? inst.name : '');
+    }
+    App.renderAglutinadaDetail(App.currentAglutinadaId);
   }
   if (section === 'relatorios') {
     App.renderReports();
@@ -114,7 +123,7 @@ App.renderKPIs = function () {
     </div>
     <div class="kpi-card">
       <div class="kpi-icon" style="background:#F3E5F5;color:var(--acai)"><i class="fas fa-building"></i></div>
-      <div class="kpi-label">Instituições Ativas</div>
+      <div class="kpi-label">Aglutinadas Ativas</div>
       <div class="kpi-value">${DATA.project.institutions}</div>
       <div class="kpi-change up"><i class="fas fa-arrow-up"></i> 100% operantes</div>
     </div>
@@ -353,15 +362,16 @@ App.renderInstitutions = function (filter = 'all') {
     <div class="region-title">
       <i class="fas fa-map-marker-alt" style="color:${region === 'Pará' ? 'var(--primary)' : 'var(--acai)'}"></i>
       ${region}
-      <span class="region-badge ${region === 'Pará' ? 'pa' : 'ap'}">${insts.length} instituições</span>
+      <span class="region-badge ${region === 'Pará' ? 'pa' : 'ap'}">${insts.length} aglutinadas</span>
     </div>
     <div class="inst-grid">
       ${insts.map(i => {
         const circumference = 2 * Math.PI * 40;
         const offset = circumference - (i.progress / 100) * circumference;
         const statusLabel = { onTrack: '✅ Em dia', warning: '⚠️ Atenção', late: '🔴 Atrasado' }[i.status];
+        const activityPct = i.planned > 0 ? Math.round((i.activities / i.planned) * 100) : 0;
         return `
-          <div class="inst-card" style="--accent:${i.color}">
+          <div class="inst-card" style="--accent:${i.color}" data-inst-id="${i.id}">
             <div class="inst-header">
               <div class="inst-avatar" style="background:${i.color}">${i.name}</div>
               <div class="inst-info">
@@ -382,9 +392,12 @@ App.renderInstitutions = function (filter = 'all') {
               </div>
               <div class="inst-stats">
                 <div class="inst-stat"><div class="stat-value">${i.families}</div><div class="stat-label">Famílias</div></div>
-                <div class="inst-stat"><div class="stat-value">${i.activities}</div><div class="stat-label">Atividades</div></div>
-                <div class="inst-stat"><div class="stat-value">${i.planned}</div><div class="stat-label">Atividades</div></div>
                 <div class="inst-stat"><div class="stat-value">${i.cities.length}</div><div class="stat-label">Municípios</div></div>
+                <div class="inst-stat stat-activity">
+                  <div class="stat-value">${i.activities}<span class="stat-sep">/</span>${i.planned}</div>
+                  <div class="stat-label">Atividades</div>
+                  <div class="stat-bar"><div class="stat-bar-fill" style="width:${activityPct}%"></div></div>
+                </div>
               </div>
             </div>
             <div class="inst-status ${i.status}">${statusLabel}</div>
@@ -400,6 +413,9 @@ App.renderInstitutions = function (filter = 'all') {
                   <span title="Publicações"><i class="fas fa-file-alt"></i> ${i.metaBreakdown.publicacoes}</span>
                 </div>
               </div>` : ''}
+            <button class="inst-detail-btn" data-inst-id="${i.id}">
+              Ver detalhes <i class="fas fa-arrow-right"></i>
+            </button>
           </div>
         `;
       }).join('')}
@@ -416,7 +432,156 @@ document.getElementById('instFilter').addEventListener('click', e => {
   }
 });
 
-/* Families */
+/* Institution card click → detail */
+document.getElementById('instContainer').addEventListener('click', function (e) {
+  const btn = e.target.closest('.inst-detail-btn');
+  const card = e.target.closest('.inst-card');
+  if (btn || card) {
+    const id = (btn || card).dataset.instId;
+    if (id) {
+      App.currentAglutinadaId = id;
+      App.openSection('aglutinada-detail');
+    }
+  }
+});
+
+App.backToInstituicoes = function () {
+  App.currentAglutinadaId = null;
+  App.openSection('instituicoes');
+};
+
+App.renderAglutinadaDetail = function (id) {
+  const inst = DATA.institutions.find(i => i.id === id);
+  if (!inst) { App.backToInstituicoes(); return; }
+
+  const circumference = 2 * Math.PI * 60;
+  const offset = circumference - (inst.progress / 100) * circumference;
+  const statusLabel = { onTrack: '✅ Em dia', warning: '⚠️ Atenção', late: '🔴 Atrasado' }[inst.status];
+  const activityPct = inst.planned > 0 ? Math.round((inst.activities / inst.planned) * 100) : 0;
+
+  const linkedFamilies = DATA.families.filter(f => f.instituicao === inst.name);
+  const linkedAter = DATA.ater.filter(a => a.instituicao === inst.name);
+  const linkedCapacitacoes = DATA.capacitacoes.filter(c => c.instituicao === inst.name);
+  const linkedEquipamentos = DATA.equipamentos.filter(e => e.instituicao === inst.name);
+
+  const ab = inst.activityBreakdown;
+
+  const container = document.getElementById('aglutinadaDetailContainer');
+  container.innerHTML = `
+    <div class="detail-hero" style="--accent:${inst.color}">
+      <div class="detail-hero-left">
+        <div class="detail-avatar" style="background:${inst.color}">${inst.name}</div>
+        <div class="detail-hero-info">
+          <h2>${inst.full}</h2>
+          <div class="detail-hero-meta">
+            <span><i class="fas fa-map-marker-alt"></i> ${inst.cities.join(', ')} — ${inst.state}</span>
+            <span class="detail-status ${inst.status}">${statusLabel}</span>
+          </div>
+        </div>
+      </div>
+      <div class="detail-hero-right">
+        <div class="detail-progress">
+          <svg viewBox="0 0 140 140">
+            <circle class="bg-circle" cx="70" cy="70" r="60"/>
+            <circle class="fg-circle" cx="70" cy="70" r="60"
+              stroke-dasharray="${circumference}"
+              stroke-dashoffset="${offset}"/>
+          </svg>
+          <span class="pct">${inst.progress}%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-kpis">
+      <div class="detail-kpi-card">
+        <div class="detail-kpi-icon" style="background:#E8F5E9;color:var(--primary)"><i class="fas fa-users"></i></div>
+        <div class="detail-kpi-value">${inst.families}</div>
+        <div class="detail-kpi-label">Famílias</div>
+      </div>
+      <div class="detail-kpi-card detail-kpi-activity">
+        <div class="detail-kpi-icon" style="background:#E8F5E9;color:var(--primary)"><i class="fas fa-tasks"></i></div>
+        <div class="detail-kpi-value">${inst.activities}<span class="stat-sep">/</span>${inst.planned}</div>
+        <div class="detail-kpi-label">Atividades</div>
+        <div class="detail-kpi-bar"><div class="detail-kpi-bar-fill" style="width:${activityPct}%"></div></div>
+      </div>
+      <div class="detail-kpi-card">
+        <div class="detail-kpi-icon" style="background:#F3E5F5;color:var(--acai)"><i class="fas fa-city"></i></div>
+        <div class="detail-kpi-value">${inst.cities.length}</div>
+        <div class="detail-kpi-label">Municípios</div>
+      </div>
+    </div>
+
+    ${ab ? `
+    <div class="detail-section">
+      <h3 class="detail-section-title"><i class="fas fa-chart-bar" style="color:var(--primary)"></i> Atividades por Tipo</h3>
+      <div class="detail-ab-grid">
+        ${Object.entries(ab).map(([key, val]) => {
+          const label = { visitas: 'Visitas Técnicas', treinamentos: 'Treinamentos', diagnosticos: 'Diagnósticos' }[key] || key;
+          const pct = val.total > 0 ? Math.round((val.done / val.total) * 100) : 0;
+          return `
+            <div class="detail-ab-card">
+              <div class="detail-ab-header">${label}</div>
+              <div class="detail-ab-bar-wrap">
+                <div class="detail-ab-bar">
+                  <div class="detail-ab-bar-fill" style="width:${pct}%"></div>
+                </div>
+                <span class="detail-ab-pct">${pct}%</span>
+              </div>
+              <div class="detail-ab-footer">
+                <span><span class="done">${val.done}</span> realizadas</span>
+                <span><span class="prog">${val.prog}</span> andamento</span>
+                <span><span class="pend">${val.pend}</span> pendentes</span>
+                <span><strong>${val.total}</strong> total</span>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>` : ''}
+
+    ${inst.metaBreakdown ? `
+    <div class="detail-section">
+      <h3 class="detail-section-title"><i class="fas fa-bullseye" style="color:var(--acai)"></i> Metas Físicas</h3>
+      <div class="detail-meta-grid">
+        ${Object.entries({ beneficiarios: ['👥','Beneficiários'], agroindustrias: ['🏭','Agroindústrias'], veiculos: ['🚜','Veículos'], estudos: ['📚','Estudos'], eventos: ['📅','Eventos'], publicacoes: ['📄','Publicações'] }).map(([key, [icon, label]]) => `
+          <div class="detail-meta-item">
+            <span class="detail-meta-icon">${icon}</span>
+            <div>
+              <div class="detail-meta-value">${inst.metaBreakdown[key]}</div>
+              <div class="detail-meta-label">${label}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>` : ''}
+
+    <div class="detail-section">
+      <h3 class="detail-section-title"><i class="fas fa-link" style="color:var(--secondary)"></i> Vínculos no Projeto</h3>
+      <div class="detail-links-grid">
+        <div class="detail-link-card">
+          <i class="fas fa-users" style="color:var(--primary)"></i>
+          <div class="detail-link-value">${linkedFamilies.length}</div>
+          <div class="detail-link-label">Famílias vinculadas</div>
+        </div>
+        <div class="detail-link-card">
+          <i class="fas fa-handshake" style="color:#2E7D33"></i>
+          <div class="detail-link-value">${linkedAter.length}</div>
+          <div class="detail-link-label">ATER registradas</div>
+        </div>
+        <div class="detail-link-card">
+          <i class="fas fa-graduation-cap" style="color:var(--acai)"></i>
+          <div class="detail-link-value">${linkedCapacitacoes.length}</div>
+          <div class="detail-link-label">Capacitações</div>
+        </div>
+        <div class="detail-link-card">
+          <i class="fas fa-tools" style="color:#1565C0"></i>
+          <div class="detail-link-value">${linkedEquipamentos.length}</div>
+          <div class="detail-link-label">Equipamentos</div>
+        </div>
+      </div>
+    </div>
+  `;
+};
 App.renderFamilies = function () {
   const search = (document.getElementById('famSearch').value || '').toLowerCase();
   const filterCadeia = document.getElementById('famFilterCadeia').value;
@@ -933,8 +1098,8 @@ App.renderReports = function () {
     },
     {
       key: 'institutions', icon: 'fas fa-building', iconClass: 'institutions',
-      title: 'Instituições',
-      meta: `${DATA.institutions.length} instituições`,
+      title: 'Aglutinadas',
+      meta: `${DATA.institutions.length} aglutinadas`,
       headers: ['nome','sigla','estado','municipios','familias','progresso'],
       rows: () => DATA.institutions.map(i => ({
         nome: i.full, sigla: i.name, estado: i.state,
