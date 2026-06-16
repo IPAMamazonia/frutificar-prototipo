@@ -1435,7 +1435,7 @@ App.init = function () {
     ]},
     equipamentos: { title: 'Novo Equipamento', icon: 'fa-tools', color: '#1565C0', fields: [
       { label: 'Tipo', type: 'select', options: ['Voadeira','Pick-up','Caminhão','Moto','Trator'] },
-      { label: 'Instituição', type: 'text', value: 'FVP' },
+      { label: 'Instituição', type: 'text', value: 'FVPP' },
       { label: 'Data Aquisição', type: 'text', value: '15/03/2026' },
       { label: 'Valor (R$)', type: 'text', value: '78.500' },
     ]},
@@ -1456,7 +1456,7 @@ App.init = function () {
       { label: 'Produção (ton)', type: 'text', value: '4,2' },
     ]},
     atividades: { title: 'Nova Atividade', icon: 'fa-calendar-check', color: '#F9A825', fields: [
-      { label: 'Instituição', type: 'text', value: 'FVP' },
+      { label: 'Instituição', type: 'text', value: 'FVPP' },
       { label: 'Tipo', type: 'select', options: ['Visita técnica','Treinamento','Diagnóstico rural','Oficina participativa'] },
       { label: 'Status', type: 'select', options: ['Realizada','Em andamento','Pendente'] },
       { label: 'Data', type: 'text', value: '10/06/2026' },
