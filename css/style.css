@@ -26,6 +26,7 @@ body {
   color: var(--text);
   display: flex;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* Login */
@@ -574,7 +575,7 @@ body {
 
 .inst-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.25rem;
 }
 
@@ -612,7 +613,7 @@ body {
 }
 .inst-meta-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: 0.35rem;
 }
 .inst-meta-grid span {
@@ -958,7 +959,7 @@ tr:last-child td { border-bottom: none; }
 /* Activities page */
 .atv-summary {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -1163,7 +1164,7 @@ tr:last-child td { border-bottom: none; }
 }
 .cadeia-kpi-val { font-size: 1.1rem; font-weight: 700; display: block; }
 .cadeia-kpi-lbl { font-size: 0.7rem; color: var(--text-light); }
-.cadeia-table { font-size: 0.82rem; }
+.cadeia-table { font-size: 0.82rem; overflow-x: auto; }
 .cadeia-th {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1.5fr;
@@ -1303,7 +1304,7 @@ tr:last-child td { border-bottom: none; }
 }
 .chain-compare-kpis {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
@@ -1385,7 +1386,7 @@ tr:last-child td { border-bottom: none; }
 /* Beneficiamento grid */
 .benef-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.25rem;
 }
 .benef-card {
@@ -1418,10 +1419,6 @@ tr:last-child td { border-bottom: none; }
   .cadeias-grid { grid-template-columns: 1fr; }
   .benef-grid { grid-template-columns: 1fr 1fr; }
 }
-@media (max-width: 768px) {
-  .benef-grid { grid-template-columns: 1fr; }
-}
-
 /* Activities feed */
 .atv-filters {
   display: flex;
@@ -1552,6 +1549,19 @@ tr:last-child td { border-bottom: none; }
   .atv-bd-type { width: 100%; }
   .atv-bd-status { width: auto; }
   .diag-grid-2col { grid-template-columns: 1fr; }
+  .sidebar { width: 60px; }
+  .sidebar-logo h1, .sidebar-logo span, .nav-item span, .sidebar-footer { display: none; }
+  .sidebar-logo { justify-content: center; padding: 0.75rem; }
+  .nav-item { justify-content: center; padding: 0.7rem; border-left: none; }
+  .nav-item .badge { display: none; }
+  .main { margin-left: 60px; }
+  .header { padding: 0.75rem 1rem; }
+  .section { padding: 1rem; }
+  .cadeia-th, .cadeia-tr { grid-template-columns: 1fr 1fr; font-size: 0.75rem; }
+  .cadeia-th span:nth-child(3),
+  .cadeia-th span:nth-child(4),
+  .cadeia-tr span:nth-child(3),
+  .cadeia-tr span:nth-child(4) { font-size: 0.7rem; }
 }
 @media (max-width: 768px) {
   .sidebar { width: 60px; }
@@ -1562,15 +1572,12 @@ tr:last-child td { border-bottom: none; }
   .main { margin-left: 60px; }
   .header { padding: 0.75rem 1rem; }
   .section { padding: 1rem; }
-  .kpi-grid { grid-template-columns: repeat(2,1fr); }
-  .inst-grid { grid-template-columns: 1fr 1fr; }
-  .data-grid { grid-template-columns: repeat(2,1fr); }
   .form-grid { grid-template-columns: 1fr; }
-  .atv-summary { grid-template-columns: repeat(2,1fr); }
+  .cadeia-th, .cadeia-tr { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 640px) {
-  .inst-grid { grid-template-columns: 1fr; }
+  .cadeia-th, .cadeia-tr { grid-template-columns: 1fr; gap: 0.25rem; }
 }
 
 /* Equipamentos & Estudos */
@@ -1726,7 +1733,7 @@ tr:last-child td { border-bottom: none; }
 
 .detail-kpis {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -1803,7 +1810,7 @@ tr:last-child td { border-bottom: none; }
 
 .detail-meta-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 0.85rem;
 }
 .detail-meta-item {
@@ -1820,7 +1827,7 @@ tr:last-child td { border-bottom: none; }
 
 .detail-links-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
 }
 .detail-link-card {
@@ -1859,10 +1866,7 @@ tr:last-child td { border-bottom: none; }
 }
 
 @media (max-width: 768px) {
-  .detail-kpis { grid-template-columns: repeat(2, 1fr); }
   .detail-ab-grid { grid-template-columns: 1fr; }
-  .detail-meta-grid { grid-template-columns: repeat(2, 1fr); }
-  .detail-links-grid { grid-template-columns: repeat(2, 1fr); }
   .detail-hero { flex-direction: column; text-align: center; }
   .detail-hero-left { flex-direction: column; text-align: center; }
   .detail-hero-meta { justify-content: center; }
